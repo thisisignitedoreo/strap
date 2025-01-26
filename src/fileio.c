@@ -89,7 +89,36 @@ StringArray* dir_list(String path, Arena* arena) {
 
 #else
 
-#error "posix isn't supported for now :^("
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <dirent.h>
+
+bool dir_exists(String path) {
+    char* pathname = sv_to_cstr(path);
+    struct stat sb;
+    bool isdir = stat(pathname, &sb) == 0 && S_ISDIR(sb.st_mode);
+    free(pathname);
+    return isdir;
+}
+
+StringArray* dir_list(String path, Arena* arena) {
+    char* pathname = sv_to_cstr(path);
+    DIR* dp = opendir(pathname);
+    struct dirent* ep;
+    StringArray* array = StringArray_new(arena);
+    if (dp != NULL) {
+        while ((ep = readdir(dp)) != NULL) {
+            size_t len = strlen(ep->d_name);
+            char* bytes = arena_allocate(arena, len);
+            memcpy(bytes, ep->d_name, len);
+            String str = { .bytes = bytes, .size = len };
+            StringArray_push(array, str);
+        }
+        (void) closedir(dp);
+    }
+    free(path);
+    return array;
+}
 
 #endif
 
