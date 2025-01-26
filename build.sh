@@ -6,7 +6,7 @@ cd $(dirname "$0")
 
 CC=gcc
 AR=ar
-FLAGS="-Wall -Wextra -Werror"
+FLAGS="-Wall -Wextra -Werror -std=c99 -pedantic"
 TARGET=strap
 
 if test -d objs; then rm -r objs; fi;

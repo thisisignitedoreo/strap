@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 typedef struct {
-    void* memory;
+    char* memory;
     size_t cursor;
     size_t size;
 } Arena;
