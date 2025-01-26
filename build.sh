@@ -2,6 +2,8 @@
 
 set -xe
 
+cd $(dirname "$0")
+
 CC=gcc
 AR=ar
 FLAGS="-Wall -Wextra -Werror"
@@ -10,8 +12,9 @@ TARGET=strap
 if test -d objs; then rm -r objs; fi;
 
 mkdir objs
-for file in *.c; do
-    ${CC} ${FLAGS} -c -o objs/${file%.*}.o ${file}
+for file in src/*.c; do
+    ofile=${file##*/}
+    ${CC} ${FLAGS} -c -o objs/${ofile%.*}.o ${file}
 done
 ${AR} -rcs lib${TARGET}.a objs/*.o
 
