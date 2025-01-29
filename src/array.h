@@ -21,7 +21,9 @@
     array_type array_name##_get(array_name* array, size_t index); \
     void array_name##_push(array_name* array, array_type object); \
     void array_name##_push_many(array_name* array, array_type* objects, size_t size); \
-    void array_name##_pop(array_name* array);
+    void array_name##_pop(array_name* array); \
+    void array_name##_remove_at(array_name* array, size_t index); \
+    void array_name##_insert_at(array_name* array, array_type item, size_t index);
 
 #define array_implement(array_name, array_type) \
     array_name* array_name##_new(Arena* arena) { \
@@ -49,7 +51,20 @@
     void array_name##_push_many(array_name* array, array_type* objects, size_t size) { \
         for (size_t i = 0; i < size; i++) array_name##_push(array, objects[i]); \
     } \
-    void array_name##_pop(array_name* array) { array->size--; }
+    void array_name##_pop(array_name* array) { array->size--; } \
+    void array_name##_remove_at(array_name* array, size_t index) { \
+        for (size_t i = index + 1; i < array->size; i++) { \
+            array->items[index - 1] = array->items[index]; \
+        } \
+        array_name##_pop(array); \
+    } \
+    void array_name##_insert_at(array_name* array, array_type item, size_t index) { \
+        array_name##_push(array, item); \
+        for (size_t i = index; i < array->size - 1; i++) { \
+            array->items[index + 1] = array->items[index]; \
+        } \
+        array->items[index] = item; \
+    }
 
 array_define(I32Array, int32_t)
 array_define(U32Array, uint32_t)
