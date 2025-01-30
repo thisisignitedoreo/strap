@@ -48,15 +48,15 @@ void sv_trim(String* string) {
 
 bool sv_compare(String a, String b) {
     if (a.size != b.size) return false;
-    return memcpy(a.bytes, b.bytes, a.size) == 0;
+    return memcmp(a.bytes, b.bytes, a.size) == 0;
 }
 
 bool sv_startswith(String string, String prefix) {
     if (string.size < prefix.size) return false;
-    return memcpy(string.bytes, prefix.bytes, prefix.size) == 0;
+    return memcmp(string.bytes, prefix.bytes, prefix.size) == 0;
 }
 
 bool sv_endswith(String string, String suffix) {
     if (string.size < suffix.size) return false;
-    return memcpy(string.bytes + (string.size - suffix.size), suffix.bytes, suffix.size) == 0;
+    return memcmp(string.bytes + (string.size - suffix.size), suffix.bytes, suffix.size) == 0;
 }
