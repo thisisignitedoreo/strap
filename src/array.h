@@ -72,7 +72,7 @@ array_define(FloatArray, float)
 array_define(DoubleArray, double)
 array_define(StringArray, String)
 array_define(StringBuilder, char)
-array_define(SBArray, StringBuilder)
+array_define(SBArray, StringBuilder*)
 
 #define array_foreach(array, i) for (size_t i = 0; i < array->size; i++)
 
