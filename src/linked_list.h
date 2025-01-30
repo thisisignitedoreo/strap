@@ -3,6 +3,8 @@
 #define LINKED_LIST_H_
 
 #include "arena.h"
+#include "array.h"
+
 #include <stdint.h>
 
 #define linked_list_define(list_name, list_type) \
