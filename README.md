@@ -9,7 +9,7 @@ Library consists of modules:
 - `hashmap.h`: hashmaps
 - `fileio.h`: files and directories i/o
 - `arena.h`: arena allocators
-- `string.h`: stringview implementation
+- `stringview.h`: stringview implementation
 
 Check sources for more info
 
