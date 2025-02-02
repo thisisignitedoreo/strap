@@ -6,6 +6,8 @@
 #include "arena.h"
 #include "array.h"
 
+#include <string.h>
+
 uint32_t hash_crc32(String string);
 
 #define hashmap_define(hashmap_name, hashpair_name, hashmap_type) \

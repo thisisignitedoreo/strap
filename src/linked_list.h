@@ -6,6 +6,7 @@
 #include "array.h"
 
 #include <stdint.h>
+#include <stddef.h>
 
 #define linked_list_define(list_name, list_type) \
     typedef struct list_name { \

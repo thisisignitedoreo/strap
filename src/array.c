@@ -1,8 +1,6 @@
 
 #include "array.h"
 
-#include <string.h>
-
 array_implement(I32Array, int32_t)
 array_implement(U32Array, uint32_t)
 array_implement(FloatArray, float)

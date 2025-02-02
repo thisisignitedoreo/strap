@@ -3,6 +3,7 @@
 #define ARRAY_H_
 
 #include <stdint.h>
+#include <string.h>
 
 #include "arena.h"
 #include "string.h"

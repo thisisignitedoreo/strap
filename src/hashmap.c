@@ -1,8 +1,6 @@
 
 #include "hashmap.h"
 
-#include <string.h>
-
 uint32_t hash_crc32(String string) {
     uint32_t crc = 0xFFFFFFFF;
     for (size_t i = 0; i < string.size; i++) {
