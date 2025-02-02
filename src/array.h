@@ -20,6 +20,7 @@
     \
     array_name* array_name##_new(Arena* arena); \
     array_type array_name##_get(array_name* array, size_t index); \
+    void array_name##_set(array_name* array, size_t index, array_type item); \
     void array_name##_push(array_name* array, array_type object); \
     void array_name##_push_many(array_name* array, array_type* objects, size_t size); \
     void array_name##_pop(array_name* array); \
@@ -39,6 +40,10 @@
     array_type array_name##_get(array_name* array, size_t index) { \
         if (index >= array->size) return (array_type) {0}; \
         return array->items[index]; \
+    } \
+    void array_name##_set(array_name* array, size_t index, array_type item) { \
+        if (index >= array->size) return; \
+        array->items[index] = item; \
     } \
     void array_name##_push(array_name* array, array_type object) { \
         if (array->size == array->capacity) { \
