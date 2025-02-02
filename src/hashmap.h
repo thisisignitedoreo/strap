@@ -2,7 +2,7 @@
 #ifndef HASHMAP_H_
 #define HASHMAP_H_
 
-#include "string.h"
+#include "stringview.h"
 #include "arena.h"
 #include "array.h"
 

@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 #include "arena.h"
-#include "string.h"
+#include "stringview.h"
 #include "array.h"
 
 bool file_exists(String filename);

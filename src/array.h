@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include "arena.h"
-#include "string.h"
+#include "stringview.h"
 
 #define ARRAY_CAPACITY 1
 
