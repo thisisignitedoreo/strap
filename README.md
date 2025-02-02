@@ -6,6 +6,7 @@ Library consists of modules:
 
 - `array.h`: dynamic arrays
 - `linked_list.h`: linked lists
+- `hashmap.h`: hashmaps
 - `fileio.h`: files and directories i/o
 - `arena.h`: arena allocators
 - `string.h`: stringview implementation
