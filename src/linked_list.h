@@ -57,7 +57,7 @@
     list_name* list_name##_get_previous(list_name* array) { \
         list_name* node = array->first_element; \
         if (node == array) return NULL; \
-        while (node->next_element != array) \
+        while (node != NULL && node->next_element != array) \
             node = node->next_element; \
         return node; \
     } \
@@ -96,7 +96,7 @@
         if (a == b) return; \
         list_name* prev_a = list_name##_get_previous(a); \
         list_name* next_b = list_name##_get_next(b); \
-        if (prev_a == NULL) { /* No previous element */ \
+        if (prev_a == NULL) { \
             for (list_name* node = a->first_element; node != NULL; node = node->next_element) { \
                 node->first_element = b; \
             } \
