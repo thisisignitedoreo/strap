@@ -80,6 +80,9 @@ array_define(StringArray, String)
 array_define(StringBuilder, char)
 array_define(SBArray, StringBuilder*)
 
+void StringBuilder_push_string(StringBuilder* array, String string);
+void StringBuilder_push_cstring(StringBuilder* array, char* string);
+
 #define array_foreach(array, i) for (size_t i = 0; i < array->size; i++)
 
 #endif // ARRAY_H_
