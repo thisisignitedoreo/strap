@@ -10,6 +10,8 @@ Library consists of modules:
 - `fileio.h`: files and directories i/o
 - `arena.h`: arena allocators
 - `stringview.h`: stringview implementation
+- `shell.h`: program i/o
+- `utils.h`: utility functions
 
 Check sources for more info
 
