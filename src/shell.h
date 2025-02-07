@@ -8,13 +8,15 @@
 
 #ifdef _WIN32
  #include <Windows.h>
+#else
+ #include <unistd.h>
 #endif
 
 #ifdef _WIN32
  typedef HANDLE proc_t;
  #define SHELL_INVALID_PROC INVALID_HANDLE_VALUE
 #else
- typedef int proc_t;
+ typedef pid_t proc_t;
  #define SHELL_INVALID_PROC (-1)
 #endif
 #define SHELL_INVALID_EXITCODE INT_MAX

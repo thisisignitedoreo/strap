@@ -31,7 +31,12 @@ exitcode_t shell_wait_program(proc_t proc) {
     CloseHandle(proc);
     return (exitcode_t) exitcode;
 #else
-    #error "welp"
+    for (;;) {
+        int status = 0;
+        if (waitpid(proc, &status, 0) < 0) return SHELL_INVALID_EXITCODE;
+        if (WIFEXITED(status)) return WEXITSTATUS(proc);
+        if (WIFSIGNALED(status)) return SHELL_INVALID_EXITCODE;
+    }
 #endif
 }
 
@@ -41,7 +46,7 @@ bool shell_is_program_running(proc_t proc) {
     if (!GetExitCodeProcess(proc, &exitcode)) return false;
     return exitcode == STILL_ACTIVE;
 #else
-    #error "welp welp"
+    return (bool) kill(proc, 0);
 #endif
 }
 
@@ -68,7 +73,21 @@ proc_t shell_run_program_async(Arena* arena, String program_path, StringArray* a
     CloseHandle(procInfo.hThread);
     return procInfo.hProcess;
 #else
-    #error "whoops"
+    pid_t cpid = fork();
+    if (cpid < 0) return SHELL_INVALID_PROC;
+    if (cpid == 0) {
+        // this leaks precious memory
+        // womp womp. can not do anything
+        char* pn_cstr = sv_to_cstr(program_name);
+        CStrArray* vec = CStrArray_new(arena);
+        array_foreach(arguments, i) {
+            String arg = StringArray_get(arguments, i);
+            CStrArray_push(vec, sv_to_cstr(arg));
+        }
+        CStrArray_push(vec, NULL);
+        if (execvp(pn_cstr, vec->items) < 0) exit(1);
+    }
+    return cpid;
 #endif    
 }
 
