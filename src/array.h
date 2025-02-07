@@ -77,6 +77,7 @@ array_define(U32Array, uint32_t)
 array_define(FloatArray, float)
 array_define(DoubleArray, double)
 array_define(StringArray, String)
+array_define(CStrArray, char*)
 array_define(StringBuilder, char)
 array_define(SBArray, StringBuilder*)
 
