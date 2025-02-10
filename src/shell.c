@@ -80,6 +80,7 @@ proc_t shell_run_program_async(Arena* arena, String program_path, StringArray* a
         // womp womp. can not do anything
         char* pn_cstr = sv_to_cstr(program_name);
         CStrArray* vec = CStrArray_new(arena);
+        CStrArray_push(vec, pn_cstr);
         array_foreach(arguments, i) {
             String arg = StringArray_get(arguments, i);
             CStrArray_push(vec, sv_to_cstr(arg));
