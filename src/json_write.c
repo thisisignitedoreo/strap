@@ -27,7 +27,7 @@ void jsonw_string(JsonWriteObject* obj, String str) {
         else if (ch == '\f') StringBuilder_push_cstring(obj->text, "\\f");
         else if (ch == '\"') StringBuilder_push_cstring(obj->text, "\\\"");
         else if (ch == '\\') StringBuilder_push_cstring(obj->text, "\\\\");
-        else StringBuilder_printf(obj->text, "\\x%04X", ch);
+        else StringBuilder_printf(obj->text, "\\u%04X", ch);
     }
     StringBuilder_push(obj->text, '"');
     _jsonw_push_comma(obj);
