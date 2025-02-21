@@ -12,6 +12,7 @@ Library consists of modules:
 - `stringview.h`: stringview implementation
 - `shell.h`: program i/o
 - `utils.h`: utility functions
+- `json_write.h`: JSON serialization
 
 Check sources for more info
 
