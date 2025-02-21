@@ -12,6 +12,7 @@ typedef struct {
 
 String sv(char* string);
 String sv_from_bytes(char* bytes, size_t size);
+#define sv_from_sb(sb) sv_from_bytes(sb->items, sb->size)
 char* sv_to_cstr(String string); // TO BE FREED !!!!
 String sv_split(String* string, String delim); 
 void sv_trim_left(String* string);
