@@ -116,7 +116,7 @@ StringArray* dir_list(String path, Arena* arena) {
         }
         (void) closedir(dp);
     }
-    free(path);
+    free(pathname);
     return array;
 }
 
