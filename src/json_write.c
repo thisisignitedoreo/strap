@@ -36,7 +36,7 @@ void jsonw_string(JsonWriteObject* obj, String str) {
 void jsonw_integer_number(JsonWriteObject* obj, int num) { StringBuilder_printf(obj->text, "%d", num); _jsonw_push_comma(obj); }
 void jsonw_float_number(JsonWriteObject* obj, float num) { StringBuilder_printf(obj->text, "%f", num); _jsonw_push_comma(obj); }
 void jsonw_null(JsonWriteObject* obj) { StringBuilder_push_cstring(obj->text, "null"); _jsonw_push_comma(obj); }
-void jsonw_bool(JsonWriteObject* obj, bool b) { if (b) jsonw_true(obj); else jsonw_false(obj); _jsonw_push_comma(obj); }
+void jsonw_bool(JsonWriteObject* obj, bool b) { if (b) jsonw_true(obj); else jsonw_false(obj); }
 void jsonw_true(JsonWriteObject* obj) { StringBuilder_push_cstring(obj->text, "true"); _jsonw_push_comma(obj); }
 void jsonw_false(JsonWriteObject* obj) { StringBuilder_push_cstring(obj->text, "false"); _jsonw_push_comma(obj); }
 
