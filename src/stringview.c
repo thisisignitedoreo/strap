@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <stdio.h>
 
 String sv(char* string) {
     return (String) { .bytes = string, .size = strlen(string) };
@@ -51,6 +52,12 @@ bool sv_compare(String a, String b) {
     return memcmp(a.bytes, b.bytes, a.size) == 0;
 }
 
+bool sv_compare_at(String a, String b, size_t index) {
+    if (a.size - index < b.size) return false;
+    // printf("SV DEBUG: \"%.*s\" == \""SV_FMT"\"\n", (int) b.size, a.bytes + index, SvFmt(b));
+    return memcmp(a.bytes + index, b.bytes, b.size) == 0;
+}
+
 bool sv_startswith(String string, String prefix) {
     if (string.size < prefix.size) return false;
     return memcmp(string.bytes, prefix.bytes, prefix.size) == 0;
@@ -59,4 +66,25 @@ bool sv_startswith(String string, String prefix) {
 bool sv_endswith(String string, String suffix) {
     if (string.size < suffix.size) return false;
     return memcmp(string.bytes + (string.size - suffix.size), suffix.bytes, suffix.size) == 0;
+}
+
+char sv_index(String string, size_t index) {
+    if (index >= string.size) return 0;
+    return string.bytes[index];
+}
+
+int sv_to_int(String string) {
+    int mult = 1, base = 0;
+    size_t n = 0;
+    
+    sv_trim_left(&string);
+    
+    if (sv_index(string, n) == '-') { mult *= -1; n++; }
+    else if (!isdigit(sv_index(string, n))) return 0;
+    
+    while (isdigit(sv_index(string, n))) {
+        base = (base*10) + (sv_index(string, n) - '0'); n++;
+    }
+    
+    return base * mult;
 }
