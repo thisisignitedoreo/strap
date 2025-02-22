@@ -13,6 +13,7 @@ Library consists of modules:
 - `shell.h`: program i/o
 - `utils.h`: utility functions
 - `json_write.h`: JSON serialization
+- `json_read.h`: JSON parsing
 
 Check sources for more info
 
