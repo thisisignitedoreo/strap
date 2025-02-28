@@ -32,8 +32,8 @@ uint32_t hash_crc32(String string);
 
 #define hashmap_implement(hashmap_name, hashpair_name, hashmap_type) \
     hashmap_name* hashmap_name##_new(Arena* arena, size_t capacity) { \
-        hashmap_name* hashmap = arena_allocate(arena, sizeof(hashmap_name)); \
-        hashmap->table = arena_allocate(arena, sizeof(hashpair_name) * capacity); \
+        hashmap_name* hashmap = arena_malloc(arena, sizeof(hashmap_name)); \
+        hashmap->table = arena_malloc(arena, sizeof(hashpair_name) * capacity); \
         memset(hashmap->table, 0, sizeof(hashpair_name) * capacity); \
         for (size_t i = 0; i < capacity; i++) hashmap->table[i].empty = true; \
         hashmap->capacity = capacity; \

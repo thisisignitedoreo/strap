@@ -4,7 +4,7 @@
 #include "arena.h"
 
 JsonWriteObject* jsonw_init(Arena* arena) {
-    JsonWriteObject* obj = arena_allocate(arena, sizeof(JsonWriteObject));
+    JsonWriteObject* obj = arena_malloc(arena, sizeof(JsonWriteObject));
     obj->text = StringBuilder_new(arena);
     obj->path = StringBuilder_new(arena);
     return obj;

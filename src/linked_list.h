@@ -33,7 +33,7 @@
 
 #define linked_list_implement(list_name, list_type) \
     list_name* list_name##_new(Arena* arena, list_type item) { \
-        list_name* node = arena_allocate(arena, sizeof(list_name)); \
+        list_name* node = arena_malloc(arena, sizeof(list_name)); \
         node->first_element = node; \
         node->next_element = NULL; \
         node->element = item; \
@@ -64,7 +64,7 @@
     } \
     list_name* list_name##_get_next(list_name* array) { return array->next_element; } \
     void list_name##_insert_at_node(list_name* node, list_type item) { \
-        list_name* new_node = arena_allocate(node->allocator, sizeof(list_name)); \
+        list_name* new_node = arena_malloc(node->allocator, sizeof(list_name)); \
         new_node->first_element = node->first_element; \
         new_node->next_element = node->next_element; \
         node->next_element = new_node; \

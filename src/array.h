@@ -29,9 +29,9 @@
 
 #define array_implement(array_name, array_type) \
     array_name* array_name##_new(Arena* arena) { \
-        array_name* array = arena_allocate(arena, sizeof(array_name)); \
+        array_name* array = arena_malloc(arena, sizeof(array_name)); \
         if (array == NULL) return NULL; \
-        array->items = arena_allocate(arena, ARRAY_CAPACITY * sizeof(array_type)); \
+        array->items = arena_malloc(arena, ARRAY_CAPACITY * sizeof(array_type)); \
         if (array->items == NULL) return NULL; \
         array->size = 0; array->capacity = ARRAY_CAPACITY; \
         array->allocator = arena; \
@@ -47,7 +47,7 @@
     } \
     void array_name##_push(array_name* array, array_type object) { \
         if (array->size == array->capacity) { \
-            array_type* new_items = arena_allocate(array->allocator, array->capacity * 2 * sizeof(array_type)); \
+            array_type* new_items = arena_malloc(array->allocator, array->capacity * 2 * sizeof(array_type)); \
             memcpy(new_items, array->items, array->capacity * sizeof(array_type)); \
             array->items = new_items; \
             array->capacity *= 2; \

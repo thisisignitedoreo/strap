@@ -26,7 +26,7 @@ size_t file_size(String filename) {
 
 String file_read(String filename, Arena* arena) {
     size_t size = file_size(filename);
-    char* buffer = arena_allocate(arena, size);
+    char* buffer = arena_malloc(arena, size);
     if (buffer == NULL) return (String) { .bytes = NULL, .size = 0 };
     file_read_buffer(filename, buffer);
     return (String) { .bytes = buffer, .size = size };
@@ -65,7 +65,7 @@ bool dir_exists(String path) {
 }
 
 StringArray* dir_list(String path, Arena* arena) {
-    char* str = arena_allocate(arena, path.size + 3);
+    char* str = arena_malloc(arena, path.size + 3);
     if (str == NULL) return NULL;
     memcpy(str, path.bytes, path.size);
     str[path.size] = '\\';
@@ -77,7 +77,7 @@ StringArray* dir_list(String path, Arena* arena) {
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
             size_t len = strlen(data.cFileName);
-            char* bytes = arena_allocate(arena, len);
+            char* bytes = arena_malloc(arena, len);
             memcpy(bytes, data.cFileName, len);
             String str = { .bytes = bytes, .size = len };
             StringArray_push(array, str);
@@ -109,7 +109,7 @@ StringArray* dir_list(String path, Arena* arena) {
     if (dp != NULL) {
         while ((ep = readdir(dp)) != NULL) {
             size_t len = strlen(ep->d_name);
-            char* bytes = arena_allocate(arena, len);
+            char* bytes = arena_malloc(arena, len);
             memcpy(bytes, ep->d_name, len);
             String str = { .bytes = bytes, .size = len };
             StringArray_push(array, str);

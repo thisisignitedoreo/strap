@@ -1,4 +1,11 @@
 
+// NOTE: this was reimplemented as a linked list (at 2024-02-28).
+// IF you see any errors referring to `arena_new(size_t)`
+// it means you should update your sources accordingly
+
+// NOTE: I did not use "linked_list.h" here because it
+// depends on "arena.h" which will be a cyclic inclusion.
+
 #ifndef ARENA_H_
 #define ARENA_H_
 
@@ -6,16 +13,20 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef struct {
-    char* memory;
+#define ARENA_DEF_SIZE (1024*8)
+
+typedef struct Region {
+    char *memory;
     size_t cursor;
     size_t size;
+    struct Region *next;
+} Region;
+
+typedef struct {
+    Region *begin, *end;
 } Arena;
 
-Arena* arena_new(size_t size);
-void* arena_allocate(Arena* arena, size_t size);
-void arena_resize(Arena* arena, size_t new_size);
-bool arena_done(Arena* arena);
+void* arena_malloc(Arena* arena, size_t size);
 void arena_free(Arena* arena);
 
 #endif // ARENA_H_

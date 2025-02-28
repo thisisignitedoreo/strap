@@ -3,31 +3,42 @@
 
 #include <stdlib.h>
 
-Arena* arena_new(size_t size) {
-    Arena* arena = malloc(sizeof(Arena));
-    arena->memory = malloc(size);
-    arena->cursor = 0;
-    arena->size = size;
-    return arena;
-}
+void* arena_malloc(Arena* arena, size_t size) {
+    if (arena->begin == NULL && arena->end == NULL) {
+        Region* new_region = malloc(sizeof(Region));
 
-void* arena_allocate(Arena* arena, size_t size) {
-    if (arena->cursor >= arena->size) return NULL;
-    void* ptr = arena->memory + arena->cursor;
-    arena->cursor += size;
+        new_region->cursor = 0;
+        if (size > ARENA_DEF_SIZE) new_region->size = size;
+        else new_region->size = ARENA_DEF_SIZE;
+        new_region->memory = malloc(new_region->size);
+        new_region->next = NULL;
+        
+        arena->begin = new_region;
+        arena->end = new_region;
+    }
+    if (arena->end->next == NULL && arena->end->size - arena->end->cursor < size) {
+        Region* new_region = malloc(sizeof(Region));
+
+        new_region->cursor = 0;
+        if (size > ARENA_DEF_SIZE) new_region->size = size;
+        else new_region->size = ARENA_DEF_SIZE;
+        new_region->memory = malloc(new_region->size);
+        new_region->next = NULL;
+
+        arena->end->next = new_region;
+        arena->end = new_region;
+    }
+    void* ptr = arena->end->memory + arena->end->cursor;
+    arena->end->cursor += size;
     return ptr;
 }
 
-void arena_resize(Arena* arena, size_t new_size) {
-    arena->size = new_size;
-    arena->memory = realloc(arena->memory, new_size);
-}
-
-bool arena_done(Arena* arena) {
-    return arena->cursor >= arena->size;
-}
-
 void arena_free(Arena* arena) {
-    free(arena->memory);
-    free(arena);
+    if (arena->begin == NULL && arena->end == NULL) return;
+    for (Region* r = arena->begin; r;) {
+        Region* r_next = r->next;
+        free(r->memory);
+        free(r);
+        r = r_next;
+    }
 }

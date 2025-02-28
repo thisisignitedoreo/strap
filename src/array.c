@@ -31,7 +31,7 @@ void StringBuilder_printf(StringBuilder* array, const char* fmt, ...) {
     if (n < 0) return;
     
     while (n >= (int) (array->capacity - array->size)) {
-        char* new_items = arena_allocate(array->allocator, array->capacity * 2);
+        char* new_items = arena_malloc(array->allocator, array->capacity * 2);
         memcpy(new_items, array->items, array->capacity);
         array->items = new_items;
         array->capacity *= 2;
