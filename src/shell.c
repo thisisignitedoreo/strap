@@ -41,7 +41,7 @@ exitcode_t shell_wait_program(proc_t proc) {
     for (;;) {
         int status = 0;
         if (waitpid(proc, &status, 0) < 0) return SHELL_INVALID_EXITCODE;
-        if (WIFEXITED(status)) return WEXITSTATUS(proc);
+        if (WIFEXITED(status)) return WEXITSTATUS(status);
         if (WIFSIGNALED(status)) return SHELL_INVALID_EXITCODE;
     }
 #endif
