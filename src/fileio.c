@@ -87,11 +87,31 @@ StringArray* dir_list(String path, Arena* arena) {
     return array;
 }
 
+void dir_make_directory(String path) {
+    char* cstr = sv_to_cstr(path);
+    CreateDirectory(cstr, NULL);
+    free(cstr);
+}
+
+void dir_change_cwd(String path) {
+    char* cstr = sv_to_cstr(path);
+    SetCurrentDirectory(cstr);
+    free(cstr);
+}
+
+String dir_get_cwd(Arena* arena) {
+    size_t size = GetCurrentDirectory(0, NULL);
+    char* cstr = arena_malloc(arena, size);
+    GetCurrentDirectory(size, NULL);
+    return sv(cstr);
+}
+
 #else
 
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <unistd.h>
 
 bool dir_exists(String path) {
     char* pathname = sv_to_cstr(path);
@@ -118,6 +138,28 @@ StringArray* dir_list(String path, Arena* arena) {
     }
     free(pathname);
     return array;
+}
+
+void dir_make_directory(String path) {
+    char* cstr = sv_to_cstr(path);
+    if (!dir_exists(path)) mkdir(cstr, 0700);
+    free(cstr);
+}
+
+void dir_change_cwd(String path) {
+    char* cstr = sv_to_cstr(path);
+    if (dir_exists(path)) chdir(cstr);
+    free(cstr);
+}
+
+String dir_get_cwd(Arena* arena) {
+    char* cwd = getcwd(NULL, 0);
+    if (cwd == NULL) return sv_from_bytes(NULL, 0);
+    char* cwda = arena_malloc(arena, strlen(cwd));
+    memcpy(cwda, cwd, strlen(cwd));
+    String str = sv_from_bytes(cwda, strlen(cwd));
+    free(cwd);
+    return str;
 }
 
 #endif

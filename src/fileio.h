@@ -17,5 +17,8 @@ void file_write(String filename, String content);
 
 bool dir_exists(String path);
 StringArray* dir_list(String path, Arena* arena);
+void dir_make_directory(String path);
+void dir_change_cwd(String path);
+String dir_get_cwd(Arena* arena);
 
 #endif // FILEIO_H_
