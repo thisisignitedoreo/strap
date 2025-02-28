@@ -7,7 +7,7 @@
 #include "array.h"
 
 #ifdef _WIN32
- #include <Windows.h>
+ #include <windows.h>
 #else
  #include <unistd.h>
  #include <sys/types.h>

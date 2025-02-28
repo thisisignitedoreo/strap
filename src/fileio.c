@@ -54,7 +54,7 @@ void file_write(String filename, String content) {
 #ifdef _WIN32
 
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <windows.h>
 
 bool dir_exists(String path) {
     char* cstr = sv_to_cstr(path);
