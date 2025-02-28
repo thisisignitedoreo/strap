@@ -4,8 +4,8 @@ set -e
 
 cd $(dirname "$0")
 
-CC=gcc
-AR=ar
+CC="${1}gcc"
+AR="${1}ar"
 FLAGS="-Wall -Wextra -Werror -std=gnu99 -pedantic"
 TARGET=strap
 
