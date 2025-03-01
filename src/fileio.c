@@ -87,6 +87,25 @@ StringArray* dir_list(String path, Arena* arena) {
     return array;
 }
 
+StringArray* dir_fnmatch(String pattern, Arena* arena) {
+    char* str = sv_to_cstr(arena, path.size + 3);
+    WIN32_FIND_DATA data;
+    HANDLE hFind = FindFirstFile(str, &data);
+    StringArray* array = StringArray_new(arena);
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            size_t len = strlen(data.cFileName);
+            char* bytes = arena_malloc(arena, len);
+            memcpy(bytes, data.cFileName, len);
+            String str = { .bytes = bytes, .size = len };
+            StringArray_push(array, str);
+        } while (FindNextFile(hFind, &data));
+        FindClose(hFind);
+    }
+    free(str);
+    return array;
+}
+
 void dir_make_directory(String path) {
     char* cstr = sv_to_cstr(path);
     CreateDirectory(cstr, NULL);
@@ -112,6 +131,7 @@ String dir_get_cwd(Arena* arena) {
 #include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <glob.h>
 
 bool dir_exists(String path) {
     char* pathname = sv_to_cstr(path);
@@ -138,6 +158,22 @@ StringArray* dir_list(String path, Arena* arena) {
     }
     free(pathname);
     return array;
+}
+
+StringArray* dir_fnmatch(String pattern, Arena* arena) {
+    char* cstr = sv_to_cstr(pattern);
+    StringArray* sa = StringArray_new(arena);
+    glob_t pglob;
+    if (glob(cstr, 0, NULL, &pglob) != 0) return sa;
+    for (size_t i = 0; i < pglob.gl_pathc; i++) {
+        String original = sv(pglob.gl_pathv[i]);
+        char* copy = arena_malloc(arena, original.size);
+        memcpy(copy, original.bytes, original.size);
+        StringArray_push(sa, sv_from_bytes(copy, original.size));
+    }
+    globfree(&pglob);
+    free(cstr);
+    return sa;
 }
 
 void dir_make_directory(String path) {
