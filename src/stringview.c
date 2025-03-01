@@ -74,7 +74,8 @@ char sv_index(String string, size_t index) {
 }
 
 int sv_to_int(String string) {
-    int mult = 1, base = 0;
+    int mult = 1;
+    unsigned base = 0;
     size_t n = 0;
     
     sv_trim_left(&string);
