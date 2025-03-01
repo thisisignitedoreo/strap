@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 void* arena_malloc(Arena* arena, size_t size) {
+    size += -size & 7;  // FIXME: a dirty fix for structure alignment
     if (arena->begin == NULL && arena->end == NULL) {
         Region* new_region = malloc(sizeof(Region));
 
