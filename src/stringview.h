@@ -13,7 +13,7 @@ typedef struct {
 
 String sv(char* string);
 String sv_from_bytes(char* bytes, size_t size);
-#define sv_from_sb(sb) sv_from_bytes(sb->items, sb->size)
+#define sv_from_sb(sb) sv_from_bytes(sb->data, sb->size)
 #define sv_from_char(c) sv_from_bytes(&c, 1)
 char* sv_to_cstr(String string); // TO BE FREED !!!!
 String sv_split(String* string, String delim); 

@@ -1,4 +1,7 @@
 
+// TO BE REWRITTEN
+// This giant macro is _not_ ideal.
+
 #ifndef HASHMAP_H_
 #define HASHMAP_H_
 

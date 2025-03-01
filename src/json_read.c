@@ -18,21 +18,21 @@ size_t jsonr_traverse_path_separator(Arena* arena, String json, String path, cha
                 if ((sv_index(json, index) == ',' || sv_index(json, index) == '{') && seen_open_parens == 0) {
                     index++;
                     while (sv_index(json, index) != '"') index++;
-                    StringBuilder* str = StringBuilder_new(arena);
-                    StringBuilder_push(str, '"');
+                    StringBuilder* str = array_new(StringBuilder, arena);
+                    *array_push(str) = '"';
                     for (size_t i = 0; i < key.size; i++) {
                         char ch = key.bytes[i];
-                        if (ch >= ' ' && ch <= '~') StringBuilder_push(str, ch);
-                        else if (ch == '\n') StringBuilder_push_cstring(str, "\\n");
-                        else if (ch == '\r') StringBuilder_push_cstring(str, "\\r");
-                        else if (ch == '\t') StringBuilder_push_cstring(str, "\\t");
-                        else if (ch == '\b') StringBuilder_push_cstring(str, "\\b");
-                        else if (ch == '\f') StringBuilder_push_cstring(str, "\\f");
-                        else if (ch == '\"') StringBuilder_push_cstring(str, "\\\"");
-                        else if (ch == '\\') StringBuilder_push_cstring(str, "\\\\");
-                        else StringBuilder_printf(str, "\\u%04X", ch);
+                        if (ch >= ' ' && ch <= '~') *array_push(str) = ch;
+                        else if (ch == '\n') array_sb_push_cstring(str, "\\n");
+                        else if (ch == '\r') array_sb_push_cstring(str, "\\r");
+                        else if (ch == '\t') array_sb_push_cstring(str, "\\t");
+                        else if (ch == '\b') array_sb_push_cstring(str, "\\b");
+                        else if (ch == '\f') array_sb_push_cstring(str, "\\f");
+                        else if (ch == '\"') array_sb_push_cstring(str, "\\\"");
+                        else if (ch == '\\') array_sb_push_cstring(str, "\\\\");
+                        else array_sb_printf(str, "\\u%04X", ch);
                     }
-                    StringBuilder_push(str, '"');
+                    *array_push(str) = '"';
                     String s = sv_from_sb(str);
                     if (sv_compare_at(json, s, index)) {
                         index += s.size;
@@ -82,28 +82,28 @@ float jsonr_read_float_separator(Arena* arena, String json, String path, char se
 String jsonr_read_string_separator(Arena* arena, String json, String path, char separator) {
     String string = jsonr_read_json_separator(arena, json, path, separator);
     if (sv_index(json, 0) != '"') return sv_from_bytes(string.bytes, 0);
-    StringBuilder* sb = StringBuilder_new(arena);
+    StringBuilder* sb = array_new(StringBuilder, arena);
     for (size_t index = 1; index < string.size-1; index++) {
         char ch = sv_index(json, index);
         if (ch == '"') break;
         else if (ch == '\\') {
             index++;
             ch = sv_index(json, index);
-            if (ch == 'r') StringBuilder_push(sb, '\r');
-            else if (ch == 'n') StringBuilder_push(sb, '\n');
-            else if (ch == 't') StringBuilder_push(sb, '\t');
-            else if (ch == 'b') StringBuilder_push(sb, '\b');
-            else if (ch == 'f') StringBuilder_push(sb, '\f');
-            else if (ch == '"') StringBuilder_push(sb, '"');
-            else if (ch == '\\') StringBuilder_push(sb, '\\');
+            if (ch == 'r') *array_push(sb) = '\r';
+            else if (ch == 'n') *array_push(sb) = '\n';
+            else if (ch == 't') *array_push(sb) = '\t';
+            else if (ch == 'b') *array_push(sb) = '\b';
+            else if (ch == 'f') *array_push(sb) = '\f';
+            else if (ch == '"') *array_push(sb) = '"';
+            else if (ch == '\\') *array_push(sb) = '\\';
             else if (ch == 'u') {
                 String hex = sv_from_bytes(json.bytes + index + 1, 4);
                 index += 4;
                 unsigned int s = 0;
                 sscanf(hex.bytes, "%04X", &s);
-                StringBuilder_push(sb, (char) s);
+                *array_push(sb) = (char) s;
             }
-        } else StringBuilder_push(sb, ch);
+        } else *array_push(sb) = ch;
     }
     return sv_from_sb(sb);
 }
@@ -122,11 +122,11 @@ StringArray* jsonr_read_keys_separator(Arena* arena, String json, String path, c
     String dict = jsonr_read_json_separator(arena, json, path, separator);
     if (sv_index(dict, 0) != '{') return NULL;
     size_t index = 0;
-    StringArray* array = StringArray_new(arena);
+    StringArray* array = array_new(StringArray, arena);
     do {
         index++;
         while (isspace(sv_index(dict, index))) index++;
-        StringBuilder* sb = StringBuilder_new(arena);
+        StringBuilder* sb = array_new(StringBuilder, arena);
         for (;;) {
             index++;
             char ch = sv_index(dict, index);
@@ -135,24 +135,24 @@ StringArray* jsonr_read_keys_separator(Arena* arena, String json, String path, c
             else if (ch == '\\') {
                 index++;
                 ch = sv_index(dict, index);
-                if (ch == 'r') StringBuilder_push(sb, '\r');
-                else if (ch == 'n') StringBuilder_push(sb, '\n');
-                else if (ch == 't') StringBuilder_push(sb, '\t');
-                else if (ch == 'b') StringBuilder_push(sb, '\b');
-                else if (ch == 'f') StringBuilder_push(sb, '\f');
-                else if (ch == '"') StringBuilder_push(sb, '"');
-                else if (ch == '\\') StringBuilder_push(sb, '\\');
+                if (ch == 'r') *array_push(sb) = '\r';
+                else if (ch == 'n') *array_push(sb) = '\n';
+                else if (ch == 't') *array_push(sb) = '\t';
+                else if (ch == 'b') *array_push(sb) = '\b';
+                else if (ch == 'f') *array_push(sb) = '\f';
+                else if (ch == '"') *array_push(sb) = '\"';
+                else if (ch == '\\') *array_push(sb) = '\\';
                 else if (ch == 'u') {
                     String hex = sv_from_bytes(dict.bytes + index + 1, 4);
                     index += 4;
                     unsigned int s = 0;
                     sscanf(hex.bytes, "%04X", &s);
-                    StringBuilder_push(sb, (char) s);
+                    *array_push(sb) = (char) s;
                 }
-            } else StringBuilder_push(sb, ch);
+            } else *array_push(sb) = ch;
         }
         String key = sv_from_sb(sb);
-        StringArray_push(array, key);
+        *array_push(array) = key;
         while (sv_index(dict, index) != ':') index++;
         index++;
         while (isspace(sv_index(dict, index))) index++;

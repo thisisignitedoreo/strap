@@ -9,20 +9,20 @@
 #endif
 
 StringBuilder* shell_render_command(Arena* arena, String program_path, StringArray* arguments) {
-    StringBuilder* sb = StringBuilder_new(arena);
+    StringBuilder* sb = array_new(StringBuilder, arena);
     bool enquote = memchr(program_path.bytes, ' ', program_path.size);
-    if (enquote) StringBuilder_push(sb, '"');
-    StringBuilder_push_string(sb, program_path);
-    if (enquote) StringBuilder_push(sb, '"');
-    StringBuilder_push(sb, ' ');
+    if (enquote) *array_push(sb) = '"';
+    array_sb_push_string(sb, program_path);
+    if (enquote) *array_push(sb) = '"';
+    *array_push(sb) = ' ';
     if (arguments) {
         array_foreach(arguments, i) {
-            String str = StringArray_get(arguments, i);
+            String str = array_get(arguments, i);
             bool enquote = memchr(str.bytes, ' ', str.size);
-            if (enquote) StringBuilder_push(sb, '"');
-            StringBuilder_push_string(sb, str);
-            if (enquote) StringBuilder_push(sb, '"');
-            StringBuilder_push(sb, ' ');
+            if (enquote) *array_push(sb) = '"';
+            array_sb_push_string(sb, str);
+            if (enquote) *array_push(sb) = '"';
+            *array_push(sb) = ' ';
         }
     }
     return sb;
@@ -65,7 +65,7 @@ exitcode_t shell_run_program(Arena* arena, String program_path, StringArray* arg
 
 proc_t shell_run_program_async(Arena* arena, String program_path, StringArray* arguments) {
     StringBuilder* sb = shell_render_command(arena, program_path, arguments);
-    StringBuilder_push(sb, 0);
+    *array_push(sb) = 0;
 #ifdef _WIN32
     STARTUPINFO startInfo;
     ZeroMemory(&startInfo, sizeof(startInfo));
@@ -86,14 +86,14 @@ proc_t shell_run_program_async(Arena* arena, String program_path, StringArray* a
         // this leaks precious memory
         // womp womp. can not do anything
         char* pn_cstr = sv_to_cstr(program_path);
-        CStrArray* vec = CStrArray_new(arena);
-        CStrArray_push(vec, pn_cstr);
+        CStrArray* vec = array_new(CStrArray, arena);
+        *array_push(vec) = pn_cstr;
         array_foreach(arguments, i) {
-            String arg = StringArray_get(arguments, i);
-            CStrArray_push(vec, sv_to_cstr(arg));
+            String arg = array_get(arguments, i);
+            *array_push(vec) = sv_to_cstr(arg);
         }
-        CStrArray_push(vec, NULL);
-        if (execvp(pn_cstr, vec->items) < 0) exit(1);
+        *array_push(vec) = NULL;
+        if (execvp(pn_cstr, vec->data) < 0) exit(1);
     }
     return cpid;
 #endif    

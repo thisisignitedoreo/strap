@@ -1,4 +1,8 @@
 
+// NOTE: this was reimplemented as a system of macros (on 2025-03-01)
+// IF you see any errors referring to `I32Array_new(Arena*)` or similar
+// it means you should update your sources accordingly
+
 #ifndef ARRAY_H_
 #define ARRAY_H_
 
@@ -10,81 +14,41 @@
 
 #define ARRAY_CAPACITY 1
 
-#define array_define(array_name, array_type) \
+#define define_array_struct(array_name, array_type) \
     typedef struct { \
-        array_type* items; \
-        size_t size; \
-        size_t capacity; \
+        size_t size, capacity; \
+        array_type* data; \
         Arena* allocator; \
-    } array_name; \
-    \
-    array_name* array_name##_new(Arena* arena); \
-    array_type array_name##_get(array_name* array, size_t index); \
-    void array_name##_set(array_name* array, size_t index, array_type item); \
-    void array_name##_push(array_name* array, array_type object); \
-    void array_name##_push_many(array_name* array, array_type* objects, size_t size); \
-    void array_name##_pop(array_name* array); \
-    void array_name##_remove_at(array_name* array, size_t index); \
-    void array_name##_insert_at(array_name* array, array_type item, size_t index);
+    } array_name;
 
-#define array_implement(array_name, array_type) \
-    array_name* array_name##_new(Arena* arena) { \
-        array_name* array = arena_malloc(arena, sizeof(array_name)); \
-        if (array == NULL) return NULL; \
-        array->items = arena_malloc(arena, ARRAY_CAPACITY * sizeof(array_type)); \
-        if (array->items == NULL) return NULL; \
-        array->size = 0; array->capacity = ARRAY_CAPACITY; \
-        array->allocator = arena; \
-        return array; \
-    } \
-    array_type array_name##_get(array_name* array, size_t index) { \
-        if (index >= array->size) return (array_type) {0}; \
-        return array->items[index]; \
-    } \
-    void array_name##_set(array_name* array, size_t index, array_type item) { \
-        if (index >= array->size) return; \
-        array->items[index] = item; \
-    } \
-    void array_name##_push(array_name* array, array_type object) { \
-        if (array->size == array->capacity) { \
-            array_type* new_items = arena_malloc(array->allocator, array->capacity * 2 * sizeof(array_type)); \
-            memcpy(new_items, array->items, array->capacity * sizeof(array_type)); \
-            array->items = new_items; \
-            array->capacity *= 2; \
-        } \
-        array->items[array->size++] = object; \
-    } \
-    void array_name##_push_many(array_name* array, array_type* objects, size_t size) { \
-        for (size_t i = 0; i < size; i++) array_name##_push(array, objects[i]); \
-    } \
-    void array_name##_pop(array_name* array) { array->size--; } \
-    void array_name##_remove_at(array_name* array, size_t index) { \
-        for (size_t i = index + 1; i < array->size; i++) { \
-            array->items[index - 1] = array->items[index]; \
-        } \
-        array_name##_pop(array); \
-    } \
-    void array_name##_insert_at(array_name* array, array_type item, size_t index) { \
-        array_name##_push(array, item); \
-        for (size_t i = index; i < array->size - 1; i++) { \
-            array->items[index + 1] = array->items[index]; \
-        } \
-        array->items[index] = item; \
-    }
+define_array_struct(I32Array, int32_t)
+define_array_struct(U32Array, uint32_t)
+define_array_struct(FloatArray, float)
+define_array_struct(DoubleArray, double)
+define_array_struct(StringArray, String)
+define_array_struct(CStrArray, char*)
+define_array_struct(StringBuilder, char)
+define_array_struct(SBArray, StringBuilder*)
 
-array_define(I32Array, int32_t)
-array_define(U32Array, uint32_t)
-array_define(FloatArray, float)
-array_define(DoubleArray, double)
-array_define(StringArray, String)
-array_define(CStrArray, char*)
-array_define(StringBuilder, char)
-array_define(SBArray, StringBuilder*)
+void* array_resize(Arena* arena, void* data, size_t* capacity, size_t stride);
+#define array_push(array) \
+    ((array)->size == (array)->capacity ? \
+        (array)->data = array_resize((array)->allocator, (array)->data, &(array)->capacity, sizeof(*(array)->data)), \
+        (array)->data + (array)->size++ : \
+        (array)->data + (array)->size++ \
+    )
+#define array_pop(array) ((array)->data + (array)->size--)
 
-void StringBuilder_push_string(StringBuilder* array, String string);
-void StringBuilder_push_cstring(StringBuilder* array, char* string);
-void StringBuilder_printf(StringBuilder* array, const char* fmt, ...);
+#define array_set(array, element) ((array)->data + element)
+#define array_get(array, element) *((array)->data + element)
+
+void* array_new_(size_t struct_size, Arena* arena);
+#define array_new(array_type, arena) array_new_(sizeof(array_type), arena)
 
 #define array_foreach(array, i) for (size_t i = 0; i < array->size; i++)
+
+void array_sb_push_cstring(StringBuilder* sb, char* str);
+void array_sb_push_string(StringBuilder* sb, String str);
+void array_sb_printf(StringBuilder* sb, char* fmt, ...);
 
 #endif // ARRAY_H_

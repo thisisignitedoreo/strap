@@ -73,14 +73,13 @@ StringArray* dir_list(String path, Arena* arena) {
     str[path.size+2] = 0;
     WIN32_FIND_DATA data;
     HANDLE hFind = FindFirstFile(str, &data);
-    StringArray* array = StringArray_new(arena);
+    StringArray* array = array_new(StringArray, arena);
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
             size_t len = strlen(data.cFileName);
             char* bytes = arena_malloc(arena, len);
             memcpy(bytes, data.cFileName, len);
-            String str = { .bytes = bytes, .size = len };
-            StringArray_push(array, str);
+            *array_push(array) = sv_from_bytes(bytes, len);
         } while (FindNextFile(hFind, &data));
         FindClose(hFind);
     }
@@ -91,14 +90,13 @@ StringArray* dir_fnmatch(String pattern, Arena* arena) {
     char* str = sv_to_cstr(arena, path.size + 3);
     WIN32_FIND_DATA data;
     HANDLE hFind = FindFirstFile(str, &data);
-    StringArray* array = StringArray_new(arena);
+    StringArray* array = array_new(StringArray, arena);
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
             size_t len = strlen(data.cFileName);
             char* bytes = arena_malloc(arena, len);
             memcpy(bytes, data.cFileName, len);
-            String str = { .bytes = bytes, .size = len };
-            StringArray_push(array, str);
+            *array_push(array) = sv_from_bytes(bytes, len);
         } while (FindNextFile(hFind, &data));
         FindClose(hFind);
     }
@@ -145,14 +143,13 @@ StringArray* dir_list(String path, Arena* arena) {
     char* pathname = sv_to_cstr(path);
     DIR* dp = opendir(pathname);
     struct dirent* ep;
-    StringArray* array = StringArray_new(arena);
+    StringArray* array = array_new(StringArray, arena);
     if (dp != NULL) {
         while ((ep = readdir(dp)) != NULL) {
             size_t len = strlen(ep->d_name);
             char* bytes = arena_malloc(arena, len);
             memcpy(bytes, ep->d_name, len);
-            String str = { .bytes = bytes, .size = len };
-            StringArray_push(array, str);
+            *array_push(array) = sv_from_bytes(bytes, len);
         }
         (void) closedir(dp);
     }
@@ -162,14 +159,14 @@ StringArray* dir_list(String path, Arena* arena) {
 
 StringArray* dir_fnmatch(String pattern, Arena* arena) {
     char* cstr = sv_to_cstr(pattern);
-    StringArray* sa = StringArray_new(arena);
+    StringArray* sa = array_new(StringArray, arena);
     glob_t pglob;
     if (glob(cstr, 0, NULL, &pglob) != 0) return sa;
     for (size_t i = 0; i < pglob.gl_pathc; i++) {
         String original = sv(pglob.gl_pathv[i]);
         char* copy = arena_malloc(arena, original.size);
         memcpy(copy, original.bytes, original.size);
-        StringArray_push(sa, sv_from_bytes(copy, original.size));
+        *array_push(sa) = sv_from_bytes(copy, original.size);
     }
     globfree(&pglob);
     free(cstr);
