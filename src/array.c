@@ -12,6 +12,20 @@ void* array_resize(Arena* arena, void* data, size_t* capacity, size_t stride) {
     return new_data;
 }
 
+void array_remove_(void* data, size_t element, size_t* size, size_t stride) {
+    memcpy(data + element*stride, data + (element+1)*stride, *size - element - 1);
+    *size -= 1;
+}
+
+void* array_add_(Arena* arena, void* data, size_t element, size_t* size, size_t* capacity, size_t stride) {
+    if (*size == *capacity) array_resize(arena, data, capacity, stride);
+    *size += 1;
+    void* temp = arena_malloc(arena, stride*(*size - element));
+    memcpy(temp, data + element*stride, stride*(*size - element));
+    memcpy(data + (element+1)*stride, temp, stride*(*size - element));
+    return data + element*stride;
+}
+
 void* array_new_(size_t struct_size, Arena* arena) {
     // Look. There is no other way. We anyway do not care.
     I32Array* s = arena_malloc(arena, struct_size);
