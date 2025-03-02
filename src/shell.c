@@ -74,7 +74,7 @@ proc_t shell_run_program_async(Arena* arena, String program_path, StringArray* a
     PROCESS_INFORMATION procInfo;
     ZeroMemory(&procInfo, sizeof(PROCESS_INFORMATION));
 
-    BOOL success = CreateProcessA(NULL, sb->items, NULL, NULL, TRUE, 0, NULL, NULL, &startInfo, &procInfo);
+    BOOL success = CreateProcessA(NULL, sb->data, NULL, NULL, TRUE, 0, NULL, NULL, &startInfo, &procInfo);
     if (!success) return SHELL_INVALID_PROC;
 
     CloseHandle(procInfo.hThread);
