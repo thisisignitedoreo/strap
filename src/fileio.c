@@ -87,7 +87,7 @@ StringArray* dir_list(String path, Arena* arena) {
 }
 
 StringArray* dir_fnmatch(String pattern, Arena* arena) {
-    char* str = sv_to_cstr(arena, path.size + 3);
+    char* str = sv_to_cstr(pattern);
     WIN32_FIND_DATA data;
     HANDLE hFind = FindFirstFile(str, &data);
     StringArray* array = array_new(StringArray, arena);
