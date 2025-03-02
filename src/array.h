@@ -37,10 +37,10 @@ void* array_resize(Arena* arena, void* data, size_t* capacity, size_t stride);
         (array)->data + (array)->size++ : \
         (array)->data + (array)->size++ \
     )
-#define array_pop(array) ((array)->data + (array)->size--)
+#define array_pop(array) *((array)->data + (array)->size--)
 
 #define array_set(array, element) ((array)->data + element)
-#define array_get(array, element) *((array)->data + element)
+#define array_get(array, element) (*((array)->data + element))
 
 void* array_new_(size_t struct_size, Arena* arena);
 #define array_new(array_type, arena) array_new_(sizeof(array_type), arena)
