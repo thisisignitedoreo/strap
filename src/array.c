@@ -15,6 +15,7 @@ void* array_resize(Arena* arena, void* data, size_t* capacity, size_t stride) {
 void* array_new_(size_t struct_size, Arena* arena) {
     // Look. There is no other way. We anyway do not care.
     I32Array* s = arena_malloc(arena, struct_size);
+    memset(s, 0, struct_size);
     s->allocator = arena;
     return s;
 }
