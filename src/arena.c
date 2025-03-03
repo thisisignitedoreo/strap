@@ -43,3 +43,19 @@ void arena_free(Arena* arena) {
         r = r_next;
     }
 }
+
+char* arena_printf(Arena* arena, char* fmt, ...) {
+    va_list args;
+
+    va_start(args, fmt);
+    int n = vsnprintf(NULL, 0, fmt, args);
+    va_end(args);
+
+    char* mem = arena_malloc(arena, n);
+
+    va_start(args, fmt);
+    vsnprintf(mem, n, fmt, args);
+    va_end(args);
+
+    return mem;
+}

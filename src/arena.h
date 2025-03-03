@@ -29,4 +29,6 @@ typedef struct {
 void* arena_malloc(Arena* arena, size_t size);
 void arena_free(Arena* arena);
 
+char* arena_printf(Arena* arena, char* fmt, ...);
+
 #endif // ARENA_H_
