@@ -2,6 +2,8 @@
 #include "arena.h"
 
 #include <stdlib.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 void* arena_malloc(Arena* arena, size_t size) {
     size += -size & 7;  // FIXME: a dirty fix for structure alignment
