@@ -21,6 +21,7 @@ void sv_trim_left(String* string);
 void sv_trim_right(String* string);
 void sv_trim(String* string);
 bool sv_compare(String a, String b);
+bool sv_compare_case_ignored(String a, String b);
 bool sv_compare_at(String a, String b, size_t index);
 bool sv_startswith(String string, String prefix);
 bool sv_endswith(String string, String suffix);

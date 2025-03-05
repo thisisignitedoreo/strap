@@ -52,6 +52,14 @@ bool sv_compare(String a, String b) {
     return memcmp(a.bytes, b.bytes, a.size) == 0;
 }
 
+bool sv_compare_case_ignored(String a, String b) {
+    if (a.size != b.size) return false;
+    for (size_t i = 0; i < a.size; i++) {
+        if (tolower(a.bytes[i]) != tolower(b.bytes[i])) return false;
+    }
+    return true;
+}
+
 bool sv_compare_at(String a, String b, size_t index) {
     if (a.size - index < b.size) return false;
     // printf("SV DEBUG: \"%.*s\" == \""SV_FMT"\"\n", (int) b.size, a.bytes + index, SvFmt(b));
