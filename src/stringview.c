@@ -24,13 +24,15 @@ char* sv_to_cstr(String string) {
 String sv_split(String* string, String delim) {
     for (size_t i = 0; i < string->size - delim.size; i++) {
         if (memcmp(string->bytes + i, delim.bytes, delim.size) == 0) {
-            String result = { .bytes = string->bytes + i + delim.size,
-                              .size  = string->size  - i - delim.size };
-            string->size = i;
+            String result = { .bytes = string->bytes, .size = i };
+            string->bytes = string->bytes + i + delim.size;
+            string->size = string->size  - i - delim.size;
             return result;
         }
     }
-    String result = { .bytes = string->bytes + string->size, .size = 0 };
+    String result = { .bytes = string->bytes, .size = string->size };
+    string->bytes = NULL;
+    string->size = 0;
     return result;
 }
 
