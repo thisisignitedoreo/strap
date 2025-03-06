@@ -64,6 +64,23 @@ bool dir_exists(String path) {
     return attr & FILE_ATTRIBUTE_DIRECTORY;
 }
 
+void dir_remove_recursive(String path) {
+    char* dir = sv_to_cstr(path);
+    SHFILEOPSTRUCT file_op = {
+        NULL,
+        FO_DELETE,
+        dir,
+        "",
+        FOF_NOCONFIRMATION |
+        FOF_NOERRORUI |
+        FOF_SILENT,
+        false,
+        0,
+        "" };
+    SHFileOperation(&file_op);
+    free(cstr);
+}
+
 StringArray* dir_list(String path, Arena* arena) {
     char* str = arena_malloc(arena, path.size + 3);
     if (str == NULL) return NULL;
@@ -130,6 +147,7 @@ String dir_get_cwd(Arena* arena) {
 #include <dirent.h>
 #include <unistd.h>
 #include <glob.h>
+#include <ftw.h>
 
 bool dir_exists(String path) {
     char* pathname = sv_to_cstr(path);
@@ -137,6 +155,17 @@ bool dir_exists(String path) {
     bool isdir = stat(pathname, &sb) == 0 && S_ISDIR(sb.st_mode);
     free(pathname);
     return isdir;
+}
+
+int _dir_delete_recursive_helper(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf) {
+    (void)sb; (void)typeflag; (void)ftwbuf;
+    return remove(fpath);
+}
+
+void dir_delete_recursive(String path) {
+    char* cstr = sv_to_cstr(path);
+    nftw(cstr, _dir_delete_recursive_helper, 64, FTW_DEPTH | FTW_PHYS);
+    free(cstr);
 }
 
 StringArray* dir_list(String path, Arena* arena) {

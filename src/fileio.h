@@ -2,6 +2,10 @@
 #ifndef FILEIO_H_
 #define FILEIO_H_
 
+#ifndef _WIN32
+#define _XOPEN_SOURCE 500
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -16,6 +20,7 @@ void file_read_buffer(String filename, char* buffer);
 void file_write(String filename, String content);
 
 bool dir_exists(String path);
+void dir_delete_recursive(String path);
 StringArray* dir_list(String path, Arena* arena);
 StringArray* dir_fnmatch(String pattern, Arena* arena);
 void dir_make_directory(String path);
