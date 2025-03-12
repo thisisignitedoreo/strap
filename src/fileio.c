@@ -53,8 +53,8 @@ void file_write(String filename, String content) {
 
 #ifdef _WIN32
 
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <shellapi.h>
 
 bool dir_exists(String path) {
     char* cstr = sv_to_cstr(path);
@@ -66,7 +66,7 @@ bool dir_exists(String path) {
 
 void dir_remove_recursive(String path) {
     char* dir = sv_to_cstr(path);
-    SHFILEOPSTRUCT file_op = {
+    SHFILEOPSTRUCTA file_op = {
         NULL,
         FO_DELETE,
         dir,
@@ -77,8 +77,8 @@ void dir_remove_recursive(String path) {
         false,
         0,
         "" };
-    SHFileOperation(&file_op);
-    free(cstr);
+    SHFileOperationA(&file_op);
+    free(dir);
 }
 
 StringArray* dir_list(String path, Arena* arena) {
