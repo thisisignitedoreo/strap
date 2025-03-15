@@ -17,12 +17,14 @@ void array_remove_(char* data, size_t element, size_t* size, size_t stride) {
     *size -= 1;
 }
 
-void* array_add_(Arena* arena, char* data, size_t element, size_t* size, size_t* capacity, size_t stride) {
-    if (*size == *capacity) array_resize(arena, data, capacity, stride);
+void* array_add_(Arena* arena, char* data, size_t element, size_t* size, size_t stride) {
+    *size -= 1;
+    if (*size != element) {
+        void* temp = arena_malloc(arena, stride*(*size - element));
+        memcpy(temp, data + element*stride, stride*(*size - element));
+        memcpy(data + (element+1)*stride, temp, stride*(*size - element));
+    }
     *size += 1;
-    void* temp = arena_malloc(arena, stride*(*size - element));
-    memcpy(temp, data + element*stride, stride*(*size - element));
-    memcpy(data + (element+1)*stride, temp, stride*(*size - element));
     return data + element*stride;
 }
 
