@@ -136,7 +136,7 @@ void dir_change_cwd(String path) {
 String dir_get_cwd(Arena* arena) {
     size_t size = GetCurrentDirectory(0, NULL);
     char* cstr = arena_malloc(arena, size);
-    GetCurrentDirectory(size, NULL);
+    GetCurrentDirectory(size, cstr);
     return sv(cstr);
 }
 
