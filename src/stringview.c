@@ -21,6 +21,12 @@ char* sv_to_cstr(String string) {
     return str;
 }
 
+String sv_copy(String str, Arena* arena) {
+    char* mem = arena_malloc(arena, str.size);
+    memcpy(mem, str.bytes, str.size);
+    return sv_from_bytes(mem, str.size);
+}
+
 String sv_split(String* string, String delim) {
     for (size_t i = 0; i < string->size - delim.size; i++) {
         if (memcmp(string->bytes + i, delim.bytes, delim.size) == 0) {
