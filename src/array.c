@@ -13,7 +13,7 @@ void* array_resize(Arena* arena, void* data, size_t* capacity, size_t stride) {
 }
 
 void array_remove_(char* data, size_t element, size_t* size, size_t stride) {
-    memcpy(data + element*stride, data + (element+1)*stride, stride*(*size - element - 1));
+    memmove(data + element*stride, data + (element+1)*stride, stride*(*size - element - 1));
     *size -= 1;
 }
 

@@ -17,7 +17,7 @@ String sv_from_bytes(char* bytes, size_t size) {
 char* sv_to_cstr(String string) {
     char* str = malloc(string.size + 1);
     str[string.size] = 0;
-    memcpy(str, string.bytes, string.size);
+    if (string.size) memcpy(str, string.bytes, string.size);
     return str;
 }
 
