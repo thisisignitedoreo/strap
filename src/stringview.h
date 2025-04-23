@@ -13,8 +13,9 @@ typedef struct {
     size_t size;
 } String;
 
-String sv(char* string);
-String sv_from_bytes(char* bytes, size_t size);
+#define sv(s) (String) { s, strlen(s) }
+#define sv_const(s) (String) { s, sizeof(s)-1 }
+#define sv_from_bytes(s, i) (String) { s, i }
 #define sv_from_sb(sb) sv_from_bytes(sb->data, sb->size)
 #define sv_from_char(c) sv_from_bytes(&c, 1)
 char* sv_to_cstr(String string); // TO BE FREED !!!!

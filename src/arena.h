@@ -30,5 +30,6 @@ void* arena_malloc(Arena* arena, size_t size);
 void arena_free(Arena* arena);
 
 char* arena_printf(Arena* arena, char* fmt, ...);
+#define arena_sprintf(a, ...) sv(arena_printf(a, __VA_ARGS__))
 
 #endif // ARENA_H_

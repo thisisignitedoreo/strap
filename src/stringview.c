@@ -6,14 +6,6 @@
 #include <ctype.h>
 #include <stdio.h>
 
-String sv(char* string) {
-    return (String) { .bytes = string, .size = strlen(string) };
-}
-
-String sv_from_bytes(char* bytes, size_t size) {
-    return (String) { .bytes = bytes, .size = size };
-}
-
 char* sv_to_cstr(String string) {
     char* str = malloc(string.size + 1);
     str[string.size] = 0;
