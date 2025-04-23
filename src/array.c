@@ -28,10 +28,10 @@ void* array_add_(Arena* arena, char* data, size_t element, size_t* size, size_t 
     return data + element*stride;
 }
 
-void* array_new_(size_t struct_size, Arena* arena) {
-    // Look. There is no other way. We anyway do not care.
-    I32Array* s = arena_malloc(arena, struct_size);
-    memset(s, 0, struct_size);
+void* array_new(Arena* arena) {
+    // Who cares what type checker thinks? A pointer is a pointer (and is 8 bytes (usually))
+    I32Array* s = arena_malloc(arena, sizeof(I32Array));
+    memset(s, 0, sizeof(I32Array));
     s->allocator = arena;
     return s;
 }
@@ -58,10 +58,11 @@ void array_sb_printf(StringBuilder* sb, char* fmt, ...) {
     if (n < 0) return;
 
     while ((size_t) n >= sb->capacity - sb->size) {
-        char* new_items = arena_malloc(sb->allocator, sb->capacity * 2);
-        memcpy(new_items, sb->data, sb->capacity);
+        size_t new_cap = sb->capacity ? sb->capacity * 2 : ARRAY_CAPACITY;
+        char* new_items = arena_malloc(sb->allocator, new_cap*sizeof(*sb->data));
+        if (sb->data) memcpy(new_items, sb->data, new_cap*sizeof(*sb->data));
         sb->data = new_items;
-        sb->capacity *= 2;
+        sb->capacity = new_cap;
     }
     
     va_start(args, fmt);

@@ -9,7 +9,7 @@
 #endif
 
 StringBuilder* shell_render_command(Arena* arena, String program_path, StringArray* arguments) {
-    StringBuilder* sb = array_new(StringBuilder, arena);
+    StringBuilder* sb = array_new(arena);
     bool enquote = memchr(program_path.bytes, ' ', program_path.size);
     if (enquote) *array_push(sb) = '"';
     array_sb_push_string(sb, program_path);
@@ -86,7 +86,7 @@ proc_t shell_run_program_async(Arena* arena, String program_path, StringArray* a
         // this leaks precious memory
         // womp womp. can not do anything
         char* pn_cstr = sv_to_cstr(program_path);
-        CStrArray* vec = array_new(CStrArray, arena);
+        CStrArray* vec = array_new(arena);
         *array_push(vec) = pn_cstr;
         array_foreach(arguments, i) {
             String arg = array_get(arguments, i);

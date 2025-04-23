@@ -18,7 +18,7 @@ size_t jsonr_traverse_path_separator(Arena* arena, String json, String path, cha
                 if ((sv_index(json, index) == ',' || sv_index(json, index) == '{') && seen_open_parens == 0) {
                     index++;
                     while (sv_index(json, index) != '"') index++;
-                    StringBuilder* str = array_new(StringBuilder, arena);
+                    StringBuilder* str = array_new(arena);
                     *array_push(str) = '"';
                     for (size_t i = 0; i < key.size; i++) {
                         char ch = key.bytes[i];
@@ -82,7 +82,7 @@ float jsonr_read_float_separator(Arena* arena, String json, String path, char se
 String jsonr_read_string_separator(Arena* arena, String json, String path, char separator) {
     String string = jsonr_read_json_separator(arena, json, path, separator);
     if (sv_index(json, 0) != '"') return sv_from_bytes(string.bytes, 0);
-    StringBuilder* sb = array_new(StringBuilder, arena);
+    StringBuilder* sb = array_new(arena);
     for (size_t index = 1; index < string.size-1; index++) {
         char ch = sv_index(json, index);
         if (ch == '"') break;
@@ -122,11 +122,11 @@ StringArray* jsonr_read_keys_separator(Arena* arena, String json, String path, c
     String dict = jsonr_read_json_separator(arena, json, path, separator);
     if (sv_index(dict, 0) != '{') return NULL;
     size_t index = 0;
-    StringArray* array = array_new(StringArray, arena);
+    StringArray* array = array_new(arena);
     do {
         index++;
         while (isspace(sv_index(dict, index))) index++;
-        StringBuilder* sb = array_new(StringBuilder, arena);
+        StringBuilder* sb = array_new(arena);
         for (;;) {
             index++;
             char ch = sv_index(dict, index);

@@ -5,8 +5,8 @@
 
 JsonWriteObject* jsonw_init(Arena* arena) {
     JsonWriteObject* obj = arena_malloc(arena, sizeof(JsonWriteObject));
-    obj->text = array_new(StringBuilder, arena);
-    obj->path = array_new(StringBuilder, arena);
+    obj->text = array_new(arena);
+    obj->path = array_new(arena);
     return obj;
 }
 

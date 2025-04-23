@@ -90,7 +90,7 @@ StringArray* dir_list(String path, Arena* arena) {
     str[path.size+2] = 0;
     WIN32_FIND_DATA data;
     HANDLE hFind = FindFirstFile(str, &data);
-    StringArray* array = array_new(StringArray, arena);
+    StringArray* array = array_new(arena);
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
             size_t len = strlen(data.cFileName);
@@ -107,7 +107,7 @@ StringArray* dir_fnmatch(String pattern, Arena* arena) {
     char* str = sv_to_cstr(pattern);
     WIN32_FIND_DATA data;
     HANDLE hFind = FindFirstFile(str, &data);
-    StringArray* array = array_new(StringArray, arena);
+    StringArray* array = array_new(arena);
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
             size_t len = strlen(data.cFileName);
@@ -172,7 +172,7 @@ StringArray* dir_list(String path, Arena* arena) {
     char* pathname = sv_to_cstr(path);
     DIR* dp = opendir(pathname);
     struct dirent* ep;
-    StringArray* array = array_new(StringArray, arena);
+    StringArray* array = array_new(arena);
     if (dp != NULL) {
         while ((ep = readdir(dp)) != NULL) {
             size_t len = strlen(ep->d_name);
@@ -188,7 +188,7 @@ StringArray* dir_list(String path, Arena* arena) {
 
 StringArray* dir_fnmatch(String pattern, Arena* arena) {
     char* cstr = sv_to_cstr(pattern);
-    StringArray* sa = array_new(StringArray, arena);
+    StringArray* sa = array_new(arena);
     glob_t pglob;
     if (glob(cstr, 0, NULL, &pglob) != 0) return sa;
     for (size_t i = 0; i < pglob.gl_pathc; i++) {
