@@ -60,7 +60,7 @@ void array_sb_printf(StringBuilder* sb, char* fmt, ...) {
     while ((size_t) n >= sb->capacity - sb->size) {
         size_t new_cap = sb->capacity ? sb->capacity * 2 : ARRAY_CAPACITY;
         char* new_items = arena_malloc(sb->allocator, new_cap*sizeof(*sb->data));
-        if (sb->data) memcpy(new_items, sb->data, new_cap*sizeof(*sb->data));
+        if (sb->data) memcpy(new_items, sb->data, sb->capacity*sizeof(*sb->data));
         sb->data = new_items;
         sb->capacity = new_cap;
     }
