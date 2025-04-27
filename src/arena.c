@@ -56,7 +56,7 @@ char* arena_printf(Arena* arena, char* fmt, ...) {
     char* mem = arena_malloc(arena, n+1);
 
     va_start(args, fmt);
-    vsnprintf(mem, n, fmt, args);
+    vsnprintf(mem, n+1, fmt, args);
     va_end(args);
 
     return mem;
