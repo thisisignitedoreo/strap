@@ -37,17 +37,17 @@ void* array_new(Arena* arena) {
 }
 
 void array_sb_push_cstring(StringBuilder* sb, char* str) {
-    if (!sb->data) array_resize(sb->allocator, sb->data, &sb->capacity, sizeof(*sb->data));
+    if (!sb->data) sb->data = array_resize(sb->allocator, sb->data, &sb->capacity, sizeof(*sb->data));
     for (size_t i = 0; i < strlen(str); i++) *array_push(sb) = str[i];
 }
 
 void array_sb_push_string(StringBuilder* sb, String str) {
-    if (!sb->data) array_resize(sb->allocator, sb->data, &sb->capacity, sizeof(*sb->data));
+    if (!sb->data) sb->data = array_resize(sb->allocator, sb->data, &sb->capacity, sizeof(*sb->data));
     for (size_t i = 0; i < str.size; i++) *array_push(sb) = str.bytes[i];
 }
 
 void array_sb_printf(StringBuilder* sb, char* fmt, ...) {
-    if (!sb->data) array_resize(sb->allocator, sb->data, &sb->capacity, sizeof(*sb->data));
+    if (!sb->data) sb->data = array_resize(sb->allocator, sb->data, &sb->capacity, sizeof(*sb->data));
     
     va_list args;
 
