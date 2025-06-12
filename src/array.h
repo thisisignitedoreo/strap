@@ -46,7 +46,7 @@ void array_remove_(char* data, size_t element, size_t* size, size_t stride);
 #define array_remove(array, element) (array_remove_((char*) (array)->data, (element), &(array)->size, sizeof(*(array)->data)))
 
 void* array_add_(Arena* arena, char* data, size_t element, size_t* size, size_t stride);
-#define array_add(array, element) (array_push(array), array_add_((array)->allocator, (array)->data, (element), &(array)->size, sizeof(*(array)->data)))
+#define array_add(array, element) (array_push(array), array_add_((array)->allocator, (char*)(array)->data, (element), &(array)->size, sizeof(*(array)->data)))
 
 void* array_new(Arena* arena);
 
