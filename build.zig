@@ -36,16 +36,16 @@ pub fn build(b: *std.Build) void {
     });
 
     lib.linkLibC();
+    lib.installHeader(b.path("src/arena.h"), "arena.h");
+    lib.installHeader(b.path("src/array.h"), "array.h");
+    lib.installHeader(b.path("src/fileio.h"), "fileio.h");
+    lib.installHeader(b.path("src/hashmap.h"), "hashmap.h");
+    lib.installHeader(b.path("src/json_read.h"), "json_read.h");
+    lib.installHeader(b.path("src/json_write.h"), "json_write.h");
+    lib.installHeader(b.path("src/linked_list.h"), "linked_list.h");
+    lib.installHeader(b.path("src/shell.h"), "shell.h");
+    lib.installHeader(b.path("src/stringview.h"), "stringview.h");
+    lib.installHeader(b.path("src/utils.h"), "utils.h");
 
     b.installArtifact(lib);
-    b.installFile("src/arena.h", "include/arena.h");
-    b.installFile("src/array.h", "include/array.h");
-    b.installFile("src/fileio.h", "include/fileio.h");
-    b.installFile("src/hashmap.h", "include/hashmap.h");
-    b.installFile("src/json_read.h", "include/json_read.h");
-    b.installFile("src/json_write.h", "include/json_write.h");
-    b.installFile("src/linked_list.h", "include/linked_list.h");
-    b.installFile("src/shell.h", "include/shell.h");
-    b.installFile("src/stringview.h", "include/stringview.h");
-    b.installFile("src/utils.h", "include/utils.h");
 }
