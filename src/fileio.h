@@ -2,10 +2,6 @@
 #ifndef FILEIO_H_
 #define FILEIO_H_
 
-#ifndef _WIN32
-#define _XOPEN_SOURCE 500
-#endif
-
 #include <stdint.h>
 #include <stdbool.h>
 
