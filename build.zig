@@ -36,16 +36,17 @@ pub fn build(b: *std.Build) void {
     });
 
     lib.linkLibC();
-    lib.installHeader(b.path("src/arena.h"), "arena.h");
-    lib.installHeader(b.path("src/array.h"), "array.h");
-    lib.installHeader(b.path("src/fileio.h"), "fileio.h");
-    lib.installHeader(b.path("src/hashmap.h"), "hashmap.h");
-    lib.installHeader(b.path("src/json_read.h"), "json_read.h");
-    lib.installHeader(b.path("src/json_write.h"), "json_write.h");
-    lib.installHeader(b.path("src/linked_list.h"), "linked_list.h");
-    lib.installHeader(b.path("src/shell.h"), "shell.h");
-    lib.installHeader(b.path("src/stringview.h"), "stringview.h");
-    lib.installHeader(b.path("src/utils.h"), "utils.h");
+    // lib.installHeader(b.path("src/arena.h"), "arena.h");
+    // lib.installHeader(b.path("src/array.h"), "array.h");
+    // lib.installHeader(b.path("src/fileio.h"), "fileio.h");
+    // lib.installHeader(b.path("src/hashmap.h"), "hashmap.h");
+    // lib.installHeader(b.path("src/json_read.h"), "json_read.h");
+    // lib.installHeader(b.path("src/json_write.h"), "json_write.h");
+    // lib.installHeader(b.path("src/linked_list.h"), "linked_list.h");
+    // lib.installHeader(b.path("src/shell.h"), "shell.h");
+    // lib.installHeader(b.path("src/stringview.h"), "stringview.h");
+    // lib.installHeader(b.path("src/utils.h"), "utils.h");
+    lib.installHeadersDirectory(b.path("src"), "", .{});
 
     b.installArtifact(lib);
 }

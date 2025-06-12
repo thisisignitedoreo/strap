@@ -18,7 +18,25 @@ Library consists of modules:
 Check sources for more info
 
 ## Build
+> [!WARNING]
+> The old `build.sh` script is very rudamentary and deprecated.
+> The use of zig build system is recommended.
+
 ```console
-$ ./build.sh
-$ gcc -L. -o main main.c -lstrap
+$ zig build [-Dtarget=x12_34-amogos-jlibc]
+```
+
+To add this library to your project use:
+```console
+$ zig fetch --save git+https://github.com/thisisignitedoreo/strap.git
+```
+
+And in your `build.zig`:
+```zig
+const strap = b.dependency("strap", .{
+    .target = target,
+    .optimize = optimize,
+});
+// ...
+exe.linkLibrary(strap.artifact("strap"));
 ```
