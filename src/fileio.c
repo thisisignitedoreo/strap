@@ -142,6 +142,11 @@ String dir_get_cwd(Arena* arena) {
 
 #else
 
+//#ifdef _XOPEN_SOURCE
+//#undef _XOPEN_SOURCE
+//#endif
+//#define _XOPEN_SOURCE 500
+
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -157,15 +162,18 @@ bool dir_exists(String path) {
     return isdir;
 }
 
-int _dir_delete_recursive_helper(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf) {
-    (void)sb; (void)typeflag; (void)ftwbuf;
-    return remove(fpath);
-}
+//int _dir_delete_recursive_helper(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf) {
+//    (void)sb; (void)typeflag; (void)ftwbuf;
+//    return remove(fpath);
+//}
+
+#include <assert.h>
 
 void dir_delete_recursive(String path) {
-    char* cstr = sv_to_cstr(path);
-    nftw(cstr, _dir_delete_recursive_helper, 64, FTW_DEPTH | FTW_PHYS);
-    free(cstr);
+    //char* cstr = sv_to_cstr(path);
+    //nftw(cstr, _dir_delete_recursive_helper, 64, FTW_DEPTH | FTW_PHYS);
+    //free(cstr);
+    assert(0 && "TODO: fix this function");
 }
 
 StringArray* dir_list(String path, Arena* arena) {
